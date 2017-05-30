@@ -24,6 +24,8 @@ public:
 	bool isLeafNode = false;
 
 	void AddedRenderables( std::vector<Renderable*> rendsToAdd );
+
+	void DefineSize( std::vector<Renderable*> rendsToAdd );
 };
 
 #endif

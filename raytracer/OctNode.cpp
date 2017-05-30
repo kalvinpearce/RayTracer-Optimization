@@ -193,3 +193,44 @@ void OctNode::AddedRenderables(std::vector<Renderable*> rendsToAdd)
 		}
 	}
 }
+
+void OctNode::DefineSize(std::vector<Renderable*> rendsToAdd)
+{
+	float x = FLT_MAX;
+	float y = FLT_MAX;
+	float z = FLT_MAX;
+	float width  = 0;
+	float height = 0;
+	float depth  = 0;
+
+	// Loop through all rends to add
+	for( std::vector<Renderable*>::iterator it = rendsToAdd.begin; it != rendsToAdd.end(); ++it )
+	{
+		if( (*it)->m_position.x < x )
+			x = (*it)->m_position.x;
+
+		if( (*it)->m_position.y < y )
+			y = (*it)->m_position.y;
+
+		if( (*it)->m_position.z < z )
+			z = (*it)->m_position.z;
+
+
+		if( (*it)->m_position.x > width )
+			width = (*it)->m_position.x;
+
+		if( (*it)->m_position.y > height )
+			height = (*it)->m_position.y;
+
+		if( (*it)->m_position.z > depth )
+			depth = (*it)->m_position.z;
+	}
+
+	position.x = x;
+	position.y = y;
+	position.z = z;
+	
+	bounds.x = width;
+	bounds.y = height;
+	bounds.z = depth;
+}

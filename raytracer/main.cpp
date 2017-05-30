@@ -50,7 +50,11 @@ int main(int argc, char **argv)
 
 	initLua(startupScript);
 
-	
+	octTree.DefineSize( g_scene.m_renderables );
+
+	printf( "x: %f, y: %f, z: %f \n", octTree.position.x, octTree.position.y, octTree.position.z );
+	printf( "width: %f, height: %f, depth: %f \n", octTree.bounds.x, octTree.bounds.y, octTree.bounds.z );
+
 	// The floating point image target that the scene is rendered into.
 	CImg<float> image(windowWidth, windowHeight, 1, 3, 0);
 	// The display object used to show the image.
