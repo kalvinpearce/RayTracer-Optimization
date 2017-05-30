@@ -11,10 +11,10 @@ OctNode::~OctNode()
 {
 }
 
-void OctNode::AddedRenderables(std::vector<Renderable*> rendsToAdd)
+void OctNode::AddRenderables(std::vector<Renderable*> rendsToAdd)
 {
 	// If not at max depth and too many rends for one node
-	if( currentDepth <= maxNodeDepth && rendsToAdd.size > maxPerNode )
+	if( currentDepth <= maxNodeDepth && rendsToAdd.size() > maxPerNode )
 	{
 		// Set up children
 		{
@@ -105,7 +105,7 @@ void OctNode::AddedRenderables(std::vector<Renderable*> rendsToAdd)
 		std::vector<Renderable*> backBotRightRends;
 
 		// Loop through all rends to add
-		for( std::vector<Renderable*>::iterator it = rendsToAdd.begin; it != rendsToAdd.end(); ++it )
+		for( std::vector<Renderable*>::iterator it = rendsToAdd.begin(); it != rendsToAdd.end(); ++it )
 		{
 			// Back
 			if( (*it)->m_position.z >= position.z + bounds.z * 0.5 )
@@ -173,21 +173,21 @@ void OctNode::AddedRenderables(std::vector<Renderable*> rendsToAdd)
 			}
 		}
 
-		children[ 0 ].AddedRenderables( frontTopLeftRends );
-		children[ 1 ].AddedRenderables( frontTopRightRends );
-		children[ 2 ].AddedRenderables( frontBotLeftRends );
-		children[ 3 ].AddedRenderables( frontBotRightRends );
+		children[ 0 ].AddRenderables( frontTopLeftRends );
+		children[ 1 ].AddRenderables( frontTopRightRends );
+		children[ 2 ].AddRenderables( frontBotLeftRends );
+		children[ 3 ].AddRenderables( frontBotRightRends );
 
-		children[ 4 ].AddedRenderables( backTopLeftRends );
-		children[ 5 ].AddedRenderables( backTopRightRends );
-		children[ 6 ].AddedRenderables( backBotLeftRends );
-		children[ 7 ].AddedRenderables( backBotRightRends );
+		children[ 4 ].AddRenderables( backTopLeftRends );
+		children[ 5 ].AddRenderables( backTopRightRends );
+		children[ 6 ].AddRenderables( backBotLeftRends );
+		children[ 7 ].AddRenderables( backBotRightRends );
 	}
 	// If at max depth, add all renderables to node
 	else
 	{
 		isLeafNode = true;
-		for( std::vector<Renderable*>::iterator it = rendsToAdd.begin; it != rendsToAdd.end(); ++it )
+		for( std::vector<Renderable*>::iterator it = rendsToAdd.begin(); it != rendsToAdd.end(); ++it )
 		{
 			rends.push_back( *it );
 		}
@@ -204,7 +204,7 @@ void OctNode::DefineSize(std::vector<Renderable*> rendsToAdd)
 	float depth  = 0;
 
 	// Loop through all rends to add
-	for( std::vector<Renderable*>::iterator it = rendsToAdd.begin; it != rendsToAdd.end(); ++it )
+	for( std::vector<Renderable*>::iterator it = rendsToAdd.begin(); it != rendsToAdd.end(); ++it )
 	{
 		if( (*it)->m_position.x < x )
 			x = (*it)->m_position.x;
@@ -233,4 +233,35 @@ void OctNode::DefineSize(std::vector<Renderable*> rendsToAdd)
 	bounds.x = width;
 	bounds.y = height;
 	bounds.z = depth;
+}
+
+bool OctNode::Intersection( OctNode node, kf::Ray ray ) 
+{
+	// x plane lower and upper points of ray
+	double xLower = ( node.position.x - ray.start.x ) / ( ray.end.x - ray.start.x );
+	double xUpper = ( node.bounds.x   - ray.start.x ) / ( ray.end.x - ray.start.x );
+
+	// Cut ray between x points
+	// if ray is in x plane, lower should be in min, upper should be in max
+	double rayCutMin = std::min( xLower, xUpper );
+	double rayCutMax = std::max( xLower, xUpper );
+
+	// y plane lower and upper points of ray
+	double yLower = ( node.position.y - ray.start.y ) / ( ray.end.y - ray.start.y );
+	double yUpper = ( node.bounds.y   - ray.start.y ) / ( ray.end.y - ray.start.y );
+
+	// cut ray between y points
+	rayCutMin = std::max( rayCutMin, std::min( yLower, yUpper ) );
+	rayCutMax = std::min( rayCutMax, std::max( yLower, yUpper ) );
+
+	// z plane lower and upper points of ray
+	double zLower = ( node.position.z - ray.start.z ) / ( ray.end.z - ray.start.z );
+	double zUpper = ( node.bounds.z   - ray.start.z ) / ( ray.end.z - ray.start.z );
+
+	// cut ray between z points
+	rayCutMin = std::max( rayCutMin, std::min( zLower, zUpper ) );
+	rayCutMax = std::min( rayCutMax, std::max( zLower, zUpper ) );
+
+	// Return true if max ray point is bigger than the min ray point
+	return rayCutMax >= rayCutMin;
 }

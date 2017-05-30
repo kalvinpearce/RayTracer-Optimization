@@ -3,6 +3,7 @@
 #include <vector>
 #include "kf/kf_vector.h"
 #include "renderable.h"
+#include <algorithm>
 
 class OctNode
 {
@@ -23,9 +24,11 @@ public:
 
 	bool isLeafNode = false;
 
-	void AddedRenderables( std::vector<Renderable*> rendsToAdd );
+	void AddRenderables( std::vector<Renderable*> rendsToAdd );
 
 	void DefineSize( std::vector<Renderable*> rendsToAdd );
+
+	bool Intersection(OctNode node, kf::Ray r);
 };
 
 #endif

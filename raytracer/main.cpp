@@ -55,6 +55,10 @@ int main(int argc, char **argv)
 	printf( "x: %f, y: %f, z: %f \n", octTree.position.x, octTree.position.y, octTree.position.z );
 	printf( "width: %f, height: %f, depth: %f \n", octTree.bounds.x, octTree.bounds.y, octTree.bounds.z );
 
+	// Help
+	// Causes the window not to show up
+	//octTree.AddRenderables( g_scene.m_renderables );
+
 	// The floating point image target that the scene is rendered into.
 	CImg<float> image(windowWidth, windowHeight, 1, 3, 0);
 	// The display object used to show the image.
