@@ -9,6 +9,7 @@
 #include "kf/kf_time.h"
 #include "kf/kf_algorithms.h"
 #include "kf/kf_math.h"
+#include "OctNode.h"
 
 using namespace cimg_library;
 
@@ -32,6 +33,8 @@ Scene g_scene;
 
 // Lua state object used to run the startup script.
 lua_State *g_state;
+
+OctNode octTree;
 
 
 int main(int argc, char **argv)
