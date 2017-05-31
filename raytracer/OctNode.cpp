@@ -238,8 +238,8 @@ void OctNode::DefineSize(std::vector<Renderable*> rendsToAdd)
 bool OctNode::Intersection( OctNode node, kf::Ray ray ) 
 {
 	// x plane lower and upper points of ray
-	double xLower = ( node.position.x - ray.start.x ) / ( ray.end.x - ray.start.x );
-	double xUpper = ( node.bounds.x   - ray.start.x ) / ( ray.end.x - ray.start.x );
+	double xLower = ( node.position.x - ray.start().x ) / ( ray.end().x - ray.start().x );
+	double xUpper = ( node.bounds.x   - ray.start().x ) / ( ray.end().x - ray.start().x );
 
 	// Cut ray between x points
 	// if ray is in x plane, lower should be in min, upper should be in max
@@ -247,16 +247,16 @@ bool OctNode::Intersection( OctNode node, kf::Ray ray )
 	double rayCutMax = std::max( xLower, xUpper );
 
 	// y plane lower and upper points of ray
-	double yLower = ( node.position.y - ray.start.y ) / ( ray.end.y - ray.start.y );
-	double yUpper = ( node.bounds.y   - ray.start.y ) / ( ray.end.y - ray.start.y );
+	double yLower = ( node.position.y - ray.start().y ) / ( ray.end().y - ray.start().y );
+	double yUpper = ( node.bounds.y   - ray.start().y ) / ( ray.end().y - ray.start().y );
 
 	// cut ray between y points
 	rayCutMin = std::max( rayCutMin, std::min( yLower, yUpper ) );
 	rayCutMax = std::min( rayCutMax, std::max( yLower, yUpper ) );
 
 	// z plane lower and upper points of ray
-	double zLower = ( node.position.z - ray.start.z ) / ( ray.end.z - ray.start.z );
-	double zUpper = ( node.bounds.z   - ray.start.z ) / ( ray.end.z - ray.start.z );
+	double zLower = ( node.position.z - ray.start().z ) / ( ray.end().z - ray.start().z );
+	double zUpper = ( node.bounds.z   - ray.start().z ) / ( ray.end().z - ray.start().z );
 
 	// cut ray between z points
 	rayCutMin = std::max( rayCutMin, std::min( zLower, zUpper ) );
