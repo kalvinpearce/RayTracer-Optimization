@@ -18,31 +18,32 @@ Scene::~Scene()
 	}
 }
 
-HitPoint Scene::intersect(const kf::Ray &ray)
+HitPoint Scene::intersect(const kf::Ray &ray, OctNode *octTree)
 {
 	HitPoint hp;
 
-	for (unsigned int i = 0; i < m_renderables.size(); ++i)
+	std::vector<Renderable*> rends;
+
+	rends = octTree->ChildIntersection( octTree, ray );
+
+	for (unsigned int i = 0; i < rends.size(); ++i)
 	{
-		if (m_renderables[i]->m_active)
-		{
-			// Find the nearest intersect point.
-			hp.nearest(m_renderables[i]->intersect(ray));
-		}
+		// Find the nearest intersect point.
+		hp.nearest(rends[i]->intersect(ray));
 	}
 	return hp;
 }
 
-kf::Colour Scene::trace(float x, float y)
+kf::Colour Scene::trace(float x, float y, OctNode *octTree)
 {
 	kf::Colour output;
 	kf::Ray ray = m_camera.viewToRay(x, y);
-	output = trace(ray, 0);
+	output = trace(ray, 0, octTree);
 
 	return output;
 }
 
-kf::Colour Scene::trace(const kf::Ray &ray, int recurseDepth)
+kf::Colour Scene::trace(const kf::Ray &ray, int recurseDepth, OctNode *octTree)
 {
 	kf::Colour output = m_sky;
 
@@ -64,7 +65,7 @@ kf::Colour Scene::trace(const kf::Ray &ray, int recurseDepth)
 	}
 
 	// Find the intersect with the scene.
-	HitPoint hp = intersect(ray);
+	HitPoint hp = intersect(ray, octTree);
 	// If true, we hit something. Otherwise return the skybox.
 	if (hp.m_hit)
 	{
@@ -85,7 +86,7 @@ kf::Colour Scene::trace(const kf::Ray &ray, int recurseDepth)
 				kf::Ray shadowRay;
 				shadowRay.start(hp.m_position + lightDirection*0.001f); // The lightDirection*0.001f bit is to stop floating point error making the ray collide with it's starting point.
 				shadowRay.delta(lightDirection);
-				HitPoint shadowhp = intersect(shadowRay);
+				HitPoint shadowhp = intersect(shadowRay, octTree);
 
 				// If a shadow is detected, the light's contribution is zero.
 				if (shadowhp.m_hit && shadowhp.m_distance < lightDistance)
@@ -118,7 +119,7 @@ kf::Colour Scene::trace(const kf::Ray &ray, int recurseDepth)
 		{
 			reflectionRay.delta(normalise(ray.delta().reflect(hp.m_normal)));
 			reflectionRay.start(hp.m_position + reflectionRay.delta()*0.001f);
-			reflectionColour = trace(reflectionRay, recurseDepth + 1) * hp.m_renderable->m_material.m_reflective;
+			reflectionColour = trace(reflectionRay, recurseDepth + 1, octTree) * hp.m_renderable->m_material.m_reflective;
 		}
 
 		// Final output is diffuse + specular + reflection.

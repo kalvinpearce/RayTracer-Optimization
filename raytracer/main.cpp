@@ -34,11 +34,11 @@ Scene g_scene;
 // Lua state object used to run the startup script.
 lua_State *g_state;
 
-OctNode octTree;
-
 
 int main(int argc, char **argv)
 {
+	OctNode *octTree = new OctNode();
+
 	srand(0);
 	kf::Time timer;
 	
@@ -50,14 +50,20 @@ int main(int argc, char **argv)
 
 	initLua(startupScript);
 
-	octTree.DefineSize( g_scene.m_renderables );
+	octTree->DefineSize( g_scene.m_renderables );
 
-	printf( "x: %f, y: %f, z: %f \n", octTree.position.x, octTree.position.y, octTree.position.z );
-	printf( "width: %f, height: %f, depth: %f \n", octTree.bounds.x, octTree.bounds.y, octTree.bounds.z );
+	printf( "x: %f, y: %f, z: %f \n", octTree->position.x, octTree->position.y, octTree->position.z );
+	printf( "width: %f, height: %f, depth: %f \n", octTree->bounds.x, octTree->bounds.y, octTree->bounds.z );
 
-	// Help
-	// Causes the window not to show up
-	//octTree.AddRenderables( g_scene.m_renderables );
+	printf( "\nRends to add: %d\n\n", g_scene.m_renderables.size() );
+
+	int counter = 0;
+
+	octTree->AddRenderables( g_scene.m_renderables, counter );
+
+	printf( "counter %d\n", counter );
+
+	printf( "loop is done" );
 
 	// The floating point image target that the scene is rendered into.
 	CImg<float> image(windowWidth, windowHeight, 1, 3, 0);
@@ -83,7 +89,7 @@ int main(int argc, char **argv)
 			long long startPixelTime = timer.getTicks();
 			#endif
 			// Retrieve the colour of the specified pixel. The math below converts pixel coordinates (0 to width) into camera coordinates (-1 to 1).
-			kf::Colour output = g_scene.trace(float(x - windowWidth / 2) / (windowWidth / 2), -float(y - windowHeight / 2) / (windowHeight / 2)*((float(windowHeight) / windowWidth)));
+			kf::Colour output = g_scene.trace(float(x - windowWidth / 2) / (windowWidth / 2), -float(y - windowHeight / 2) / (windowHeight / 2)*((float(windowHeight) / windowWidth)), octTree);
 			
 			// Clamp the output colour to 0-1 range before conversion.
 			// Convert from linear space to sRGB.

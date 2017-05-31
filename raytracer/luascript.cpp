@@ -94,7 +94,7 @@ int l_camera(lua_State *L)
 
 int l_sphere(lua_State *L)
 {
-	Sphere *s = new Sphere;
+	Renderable *s = new Renderable;
 
 	if (lua_gettop(L) > 0)
 	{

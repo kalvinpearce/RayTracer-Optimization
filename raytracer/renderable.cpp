@@ -14,15 +14,11 @@ void HitPoint::nearest(const HitPoint &hp)
 	}
 }
 
-Renderable::Renderable() :m_active(true)
+Renderable::Renderable(float rad) :m_radius(rad)
 {
 }
 
-Sphere::Sphere(float rad) :m_radius(rad)
-{
-}
-
-HitPoint Sphere::intersect(const kf::Ray &ray)
+HitPoint Renderable::intersect(const kf::Ray &ray)
 {
 	HitPoint hp;
 	kf::Vector3 L = m_position-(ray.start());

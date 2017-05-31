@@ -27,19 +27,11 @@ public:
 class Renderable
 {
 public:
-	Renderable();
-	virtual HitPoint intersect(const kf::Ray &ray) = 0;
-	kf::Vector3 m_position;
-	bool m_active;
-	Material m_material;
-};
-
-class Sphere : public Renderable
-{
-public:
-	Sphere(float rad = 1.0f);
+	Renderable(float rad = 1.0f);
 	HitPoint intersect(const kf::Ray &ray);
+	kf::Vector3 m_position;
 	float m_radius;
+	Material m_material;
 };
 
 #endif

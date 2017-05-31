@@ -7,6 +7,7 @@
 #include "light.h"
 #include "camera.h"
 #include "CImg.h"
+#include "OctNode.h"
 
 /*
 	Scene is the primary class for managing the ray trace. 
@@ -22,20 +23,20 @@ public:
 	// Test for intersect of a ray against all renderable objects.
 	// ray - the ray being tested.
 	// return - a HitPoint describing the intersect point (if one exists).
-	HitPoint intersect(const kf::Ray &ray);
+	HitPoint intersect(const kf::Ray &ray, OctNode *octTree);
 	
 	// Trace a ray into the scene through camera coordinates.
 	// Camera coordinates vary depending on the projection mode (spherical perspective or orthographic).
 	// x - camera coordinates in the range -1 to 1 (left to right)
 	// y - camera coordinates in the range 1 to -1 (top to bottom)
 	// return - the calculated colour at that camera coordinate.
-	kf::Colour trace(float x, float y);
+	kf::Colour trace(float x, float y, OctNode *octTree);
 
 	// Trace a ray into the scene through a ray.
 	// ray - the ray being tested.
 	// recurseDepth - current depth of recursion. If trace is called with a recurseDepth equal to m_recurseLimit the function stops recursion and returns black.
 	// return - the calculated colour the ray is looking at.
-	kf::Colour trace(const kf::Ray &ray, int recurseDepth);
+	kf::Colour trace(const kf::Ray &ray, int recurseDepth, OctNode *octTree);
 
 	std::vector<Renderable *> m_renderables;	// All renderable objects in the scene.
 	std::vector<Light *> m_lights;				// All lights in the scene.
