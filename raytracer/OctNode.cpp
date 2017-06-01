@@ -17,6 +17,11 @@ OctNode::~OctNode()
 	}
 }
 
+bool OctNode::sortVec ( Renderable* i, Renderable* j ) 
+{
+	return ( i->m_position < j->m_position ); 
+}
+
 void OctNode::AddRenderables( std::vector<Renderable*> rendsToAdd, int &counter )
 {
 	// If not at max depth and too many rends for one node
@@ -218,24 +223,47 @@ void OctNode::AddRenderables( std::vector<Renderable*> rendsToAdd, int &counter 
 				}
 			}
 		}
-
 		if( frontTopLeftRends.size() > 0 )
+		{
+			std::sort( frontTopLeftRends.begin(), frontTopLeftRends.end() );
 			children[ 0 ]->AddRenderables( frontTopLeftRends, counter );
+		}
 		if( frontTopRightRends.size() > 0 )
+		{
+			std::sort( frontTopRightRends.begin(), frontTopRightRends.end() );
 			children[ 1 ]->AddRenderables( frontTopRightRends, counter );
+		}
 		if( frontBotLeftRends.size() > 0 )
+		{
+			std::sort( frontBotLeftRends.begin(), frontBotLeftRends.end() );
 			children[ 2 ]->AddRenderables( frontBotLeftRends, counter );
+		}
 		if( frontBotRightRends.size() > 0 )
+		{
+			std::sort( frontBotRightRends.begin(), frontBotRightRends.end() );
 			children[ 3 ]->AddRenderables( frontBotRightRends, counter );
+		}
 
 		if( backTopLeftRends.size() > 0 )
+		{
+			std::sort( backTopLeftRends.begin(), backTopLeftRends.end() );
 			children[ 4 ]->AddRenderables( backTopLeftRends, counter );
+		}
 		if( backTopRightRends.size() > 0 )
+		{
+			std::sort( backTopRightRends.begin(), backTopRightRends.end() );
 			children[ 5 ]->AddRenderables( backTopRightRends, counter );
+		}
 		if( backBotLeftRends.size() > 0 )
+		{
+			std::sort( backBotLeftRends.begin(), backBotLeftRends.end() );
 			children[ 6 ]->AddRenderables( backBotLeftRends, counter );
+		}
 		if( backBotRightRends.size() > 0 )
+		{
+			std::sort( backBotRightRends.begin(), backBotRightRends.end() );
 			children[ 7 ]->AddRenderables( backBotRightRends, counter );
+		}
 	}
 	// If at max depth, add all renderables to node
 	else
@@ -342,11 +370,15 @@ bool OctNode::Intersect(const kf::Ray & r, float t0, float t1) const
 	return false;
 }
 
-void OctNode::RayTrace( std::vector<Renderable *> &rendsList, kf::Ray ray )
+void OctNode::RayTrace( HitPoint &hp, kf::Ray ray )
 {
 	if( isLeafNode )
 	{
-		rendsList.insert( rendsList.end(), rends.begin(), rends.end() );
+		for (unsigned int i = 0; i < rends.size(); ++i)
+		{
+			// Find the nearest intersect point.
+			hp.nearest(rends[i]->intersect(ray));
+		}
 		return;
 	}
 
@@ -354,7 +386,7 @@ void OctNode::RayTrace( std::vector<Renderable *> &rendsList, kf::Ray ray )
 	{
 		if( children[childIndex]->Intersect( ray, -1000, FLT_MAX ) )
 		{
-			children[childIndex]->RayTrace( rendsList, ray );
+			children[childIndex]->RayTrace( hp, ray );
 		}
 	}
 }

@@ -82,10 +82,10 @@ int main(int argc, char **argv)
 	long long startTime = timer.getTicks();
 
 	// Primary loop through all screen pixels.
-	for (int y = 0; y < windowHeight; y += 2)
+	for (int y = 0; y < windowHeight; ++y)
 	{
 #pragma omp parallel for schedule(dynamic)
-		for (int x = 0; x < windowWidth; x += 2)
+		for (int x = 0; x < windowWidth; ++x)
 		{
 			#ifdef TIMING_PER_PIXEL
 			long long startPixelTime = timer.getTicks();

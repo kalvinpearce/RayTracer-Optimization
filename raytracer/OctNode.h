@@ -24,13 +24,15 @@ public:
 
 	bool isLeafNode = false;
 
+	bool sortVec ( Renderable* i, Renderable* j );
+
 	void AddRenderables( std::vector<Renderable*> rendsToAdd, int &counter );
 
 	void DefineSize( std::vector<Renderable*> rendsToAdd );
 
 	bool Intersect(const kf::Ray &r, float t0, float t1) const;
 
-	void RayTrace( std::vector<Renderable *> &rendsList, kf::Ray ray );
+	void RayTrace( HitPoint &hp, kf::Ray ray );
 };
 
 #endif

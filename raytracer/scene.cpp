@@ -22,17 +22,19 @@ HitPoint Scene::intersect(const kf::Ray &ray, OctNode *octTree)
 {
 	HitPoint hp;
 
-	std::vector<Renderable*> rends;
-	rends.reserve( 20000 );
+	//std::vector<Renderable*> rends;
+	//rends.reserve( 20000 );
 
-	octTree->RayTrace( rends, ray );
+	//octTree->RayTrace( rends, ray );
 	//printf( "Ray start x: %f | Ray delta x: %f | Ray end x: %f\n", ray.start().x, ray.delta().x, ray.end().x );
 
-	for (unsigned int i = 0; i < rends.size(); ++i)
-	{
-		// Find the nearest intersect point.
-		hp.nearest(rends[i]->intersect(ray));
-	}
+	//for (unsigned int i = 0; i < rends.size(); ++i)
+	//{
+	//	// Find the nearest intersect point.
+	//	hp.nearest(rends[i]->intersect(ray));
+	//}
+	octTree->RayTrace( hp, ray );
+
 	return hp;
 }
 
