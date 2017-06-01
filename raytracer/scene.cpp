@@ -24,7 +24,8 @@ HitPoint Scene::intersect(const kf::Ray &ray, OctNode *octTree)
 
 	std::vector<Renderable*> rends;
 
-	rends = octTree->ChildIntersection( octTree, ray );
+	rends = octTree->RayCheck( octTree, ray );
+	//printf( "Ray start x: %f | Ray delta x: %f | Ray end x: %f\n", ray.start().x, ray.delta().x, ray.end().x );
 
 	for (unsigned int i = 0; i < rends.size(); ++i)
 	{

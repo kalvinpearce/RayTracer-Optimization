@@ -19,7 +19,7 @@ public:
 	kf::Vector3 bounds;
 
 	int maxPerNode = 100;
-	int maxNodeDepth = 3;
+	int maxNodeDepth = 50;
 	int currentDepth = 0;
 
 	bool isLeafNode = false;
@@ -30,7 +30,15 @@ public:
 
 	bool Intersection(OctNode *node, kf::Ray r);
 
-	std::vector<Renderable*> ChildIntersection( OctNode *node, kf::Ray ray );
+	//std::vector<Renderable*> ChildIntersection( OctNode *node, kf::Ray ray );
+
+	//std::vector<Renderable*> OctTreeRayCheck( kf::Ray ray );
+
+	std::vector<Renderable*> RayCheck( OctNode *octTree, kf::Ray ray );
+	void ProcSubtree( std::vector<Renderable*> &rends, OctNode *node, kf::Ray ray );
+
+
+	//void ProcSubtree( std::vector<Renderable*> &rends, float tx0, float ty0, float tz0, float tx1, float ty1, float tz1, OctNode *node );
 };
 
 #endif
