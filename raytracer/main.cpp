@@ -82,10 +82,10 @@ int main(int argc, char **argv)
 	long long startTime = timer.getTicks();
 
 	// Primary loop through all screen pixels.
-	for (int y = 0; y < windowHeight; ++y)
+	for (int y = 0; y < windowHeight; y++)
 	{
 #pragma omp parallel for schedule(dynamic)
-		for (int x = 0; x < windowWidth; ++x)
+		for (int x = 0; x < windowWidth; x++)
 		{
 			#ifdef TIMING_PER_PIXEL
 			long long startPixelTime = timer.getTicks();
@@ -98,10 +98,11 @@ int main(int argc, char **argv)
 			output.toSRGB();
 			output.saturate();
 			// Write the colour to the image (scaling up by 255).
-			if (output.r > 1.0)
+			/*if (output.r > 1.0)
 			{
 				int dummy = 0;
-			}
+			}*/
+
 			*image.data(x, y, 0, 0) = output.r*255;
 			*image.data(x, y, 0, 1) = output.g*255;
 			*image.data(x, y, 0, 2) = output.b*255;

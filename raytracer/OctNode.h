@@ -18,8 +18,8 @@ public:
 	kf::Vector3 position;
 	kf::Vector3 bounds;
 
-	int maxPerNode = 50;
-	int maxNodeDepth = 10;
+	int maxPerNode = 40;
+	int maxNodeDepth = 5;
 	int currentDepth = 0;
 
 	bool isLeafNode = false;
