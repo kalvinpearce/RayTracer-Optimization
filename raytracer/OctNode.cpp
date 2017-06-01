@@ -1,4 +1,6 @@
 #include "OctNode.h"
+#include "kf\kf_algorithms.h"
+#include "omp.h"
 
 
 
@@ -20,8 +22,8 @@ void OctNode::AddRenderables( std::vector<Renderable*> rendsToAdd, int &counter 
 	// If not at max depth and too many rends for one node
 	if( currentDepth < maxNodeDepth && rendsToAdd.size() > maxPerNode )
 	{
-		printf( "    Parent %d. x: % 5.1f, y: % 5.1f, z: % 5.1f | w: % 5.1f, h: % 5.1f, d: % 5.1f \n", currentDepth, position.x, position.y, position.z,
-			bounds.x, bounds.y, bounds.z );
+		//printf( "    Parent %d. x: % 5.1f, y: % 5.1f, z: % 5.1f | w: % 5.1f, h: % 5.1f, d: % 5.1f \n", currentDepth, position.x, position.y, position.z,
+			//bounds.x, bounds.y, bounds.z );
 
 		// Set up children
 		{
@@ -39,8 +41,8 @@ void OctNode::AddRenderables( std::vector<Renderable*> rendsToAdd, int &counter 
 			children[0]->bounds.z = bounds.z / 2;
 			children[0]->currentDepth = currentDepth + 1;
 
-			printf( "ftl Child  %d. x: % 5.1f, y: % 5.1f, z: % 5.1f | w: % 5.1f, h: % 5.1f, d: % 5.1f \n", 0, children[0]->position.x, children[0]->position.y, children[0]->position.z,
-					children[0]->bounds.x, children[0]->bounds.y, children[0]->bounds.z );
+			//printf( "ftl Child  %d. x: % 5.1f, y: % 5.1f, z: % 5.1f | w: % 5.1f, h: % 5.1f, d: % 5.1f \n", 0, children[0]->position.x, children[0]->position.y, children[0]->position.z,
+					//children[0]->bounds.x, children[0]->bounds.y, children[0]->bounds.z );
 
 			// Front Top Right
 			children[1]->position.x = position.x + ( bounds.x / 2 );
@@ -51,8 +53,8 @@ void OctNode::AddRenderables( std::vector<Renderable*> rendsToAdd, int &counter 
 			children[1]->bounds.z = bounds.z / 2;
 			children[1]->currentDepth = currentDepth + 1;
 
-			printf( "ftr Child  %d. x: % 5.1f, y: % 5.1f, z: % 5.1f | w: % 5.1f, h: % 5.1f, d: % 5.1f \n", 1, children[1]->position.x, children[1]->position.y, children[1]->position.z,
-				children[1]->bounds.x, children[1]->bounds.y, children[1]->bounds.z );
+			//printf( "ftr Child  %d. x: % 5.1f, y: % 5.1f, z: % 5.1f | w: % 5.1f, h: % 5.1f, d: % 5.1f \n", 1, children[1]->position.x, children[1]->position.y, children[1]->position.z,
+				//children[1]->bounds.x, children[1]->bounds.y, children[1]->bounds.z );
 
 			// Front Bot Left
 			children[2]->position.x = position.x;
@@ -63,8 +65,8 @@ void OctNode::AddRenderables( std::vector<Renderable*> rendsToAdd, int &counter 
 			children[2]->bounds.z = bounds.z / 2;
 			children[2]->currentDepth = currentDepth + 1;
 
-			printf( "fbl Child  %d. x: % 5.1f, y: % 5.1f, z: % 5.1f | w: % 5.1f, h: % 5.1f, d: % 5.1f \n", 2, children[2]->position.x, children[2]->position.y, children[2]->position.z,
-				children[2]->bounds.x, children[2]->bounds.y, children[2]->bounds.z );
+			//printf( "fbl Child  %d. x: % 5.1f, y: % 5.1f, z: % 5.1f | w: % 5.1f, h: % 5.1f, d: % 5.1f \n", 2, children[2]->position.x, children[2]->position.y, children[2]->position.z,
+				//children[2]->bounds.x, children[2]->bounds.y, children[2]->bounds.z );
 
 			// Front Bot Right
 			children[3]->position.x = position.x + ( bounds.x / 2 );
@@ -75,8 +77,8 @@ void OctNode::AddRenderables( std::vector<Renderable*> rendsToAdd, int &counter 
 			children[3]->bounds.z = bounds.z / 2;
 			children[3]->currentDepth = currentDepth + 1;
 
-			printf( "fbr Child  %d. x: % 5.1f, y: % 5.1f, z: % 5.1f | w: % 5.1f, h: % 5.1f, d: % 5.1f \n", 3, children[3]->position.x, children[3]->position.y, children[3]->position.z,
-				children[3]->bounds.x, children[3]->bounds.y, children[3]->bounds.z );
+			//printf( "fbr Child  %d. x: % 5.1f, y: % 5.1f, z: % 5.1f | w: % 5.1f, h: % 5.1f, d: % 5.1f \n", 3, children[3]->position.x, children[3]->position.y, children[3]->position.z,
+				//children[3]->bounds.x, children[3]->bounds.y, children[3]->bounds.z );
 			
 		/*  ===  */
 
@@ -89,8 +91,8 @@ void OctNode::AddRenderables( std::vector<Renderable*> rendsToAdd, int &counter 
 			children[4]->bounds.z = bounds.z / 2;
 			children[4]->currentDepth = currentDepth + 1;
 
-			printf( "btl Child  %d. x: % 5.1f, y: % 5.1f, z: % 5.1f | w: % 5.1f, h: % 5.1f, d: % 5.1f \n", 4, children[4]->position.x, children[4]->position.y, children[4]->position.z,
-				children[4]->bounds.x, children[4]->bounds.y, children[4]->bounds.z );
+			//printf( "btl Child  %d. x: % 5.1f, y: % 5.1f, z: % 5.1f | w: % 5.1f, h: % 5.1f, d: % 5.1f \n", 4, children[4]->position.x, children[4]->position.y, children[4]->position.z,
+				//children[4]->bounds.x, children[4]->bounds.y, children[4]->bounds.z );
 
 			// Back Top Right
 			children[5]->position.x = position.x + ( bounds.x / 2 );
@@ -101,8 +103,8 @@ void OctNode::AddRenderables( std::vector<Renderable*> rendsToAdd, int &counter 
 			children[5]->bounds.z = bounds.z / 2;
 			children[5]->currentDepth = currentDepth + 1;
 
-			printf( "btr Child  %d. x: % 5.1f, y: % 5.1f, z: % 5.1f | w: % 5.1f, h: % 5.1f, d: % 5.1f \n", 5, children[5]->position.x, children[5]->position.y, children[5]->position.z,
-				children[5]->bounds.x, children[5]->bounds.y, children[5]->bounds.z );
+			//printf( "btr Child  %d. x: % 5.1f, y: % 5.1f, z: % 5.1f | w: % 5.1f, h: % 5.1f, d: % 5.1f \n", 5, children[5]->position.x, children[5]->position.y, children[5]->position.z,
+				//children[5]->bounds.x, children[5]->bounds.y, children[5]->bounds.z );
 
 			// Back Bot Left
 			children[6]->position.x = position.x;
@@ -113,8 +115,8 @@ void OctNode::AddRenderables( std::vector<Renderable*> rendsToAdd, int &counter 
 			children[6]->bounds.z = bounds.z / 2;
 			children[6]->currentDepth = currentDepth + 1;
 
-			printf( "bbl Child  %d. x: % 5.1f, y: % 5.1f, z: % 5.1f | w: % 5.1f, h: % 5.1f, d: % 5.1f \n", 6, children[6]->position.x, children[6]->position.y, children[6]->position.z,
-				children[6]->bounds.x, children[6]->bounds.y, children[6]->bounds.z );
+			//printf( "bbl Child  %d. x: % 5.1f, y: % 5.1f, z: % 5.1f | w: % 5.1f, h: % 5.1f, d: % 5.1f \n", 6, children[6]->position.x, children[6]->position.y, children[6]->position.z,
+				//children[6]->bounds.x, children[6]->bounds.y, children[6]->bounds.z );
 
 			// Back Bot Right
 			children[7]->position.x = position.x + ( bounds.x / 2 );
@@ -125,8 +127,8 @@ void OctNode::AddRenderables( std::vector<Renderable*> rendsToAdd, int &counter 
 			children[7]->bounds.z = bounds.z / 2;
 			children[7]->currentDepth = currentDepth + 1;
 
-			printf( "bbr Child  %d. x: % 5.1f, y: % 5.1f, z: % 5.1f | w: % 5.1f, h: % 5.1f, d: % 5.1f \n", 7, children[7]->position.x, children[7]->position.y, children[7]->position.z,
-				children[7]->bounds.x, children[7]->bounds.y, children[7]->bounds.z );
+			//printf( "bbr Child  %d. x: % 5.1f, y: % 5.1f, z: % 5.1f | w: % 5.1f, h: % 5.1f, d: % 5.1f \n", 7, children[7]->position.x, children[7]->position.y, children[7]->position.z,
+				//children[7]->bounds.x, children[7]->bounds.y, children[7]->bounds.z );
 		}
 
 
@@ -300,252 +302,59 @@ void OctNode::DefineSize(std::vector<Renderable*> rendsToAdd)
 	bounds.z = depth  - z;
 }
 
-bool OctNode::Intersection( OctNode *node, kf::Ray ray ) 
+bool OctNode::Intersect(const kf::Ray & r, float t0, float t1) const
 {
-	//if( node->currentDepth == maxNodeDepth && node->position.x > 5 && node->position.z > 5 )
-		//return false;
+	//return true;
+	float tmin, tmax, tymin, tymax, tzmin, tzmax;
 
-	return true;
+	kf::Vector3 parameters[2];
+	int sign[3];
 
-	// x plane lower and upper points of ray
-	double xLower = ( node->position.x - ray.start().x ) / ( ray.end().x - ray.start().x );
-	double xUpper = ( node->bounds.x   - ray.start().x ) / ( ray.end().x - ray.start().x );
+	parameters[0] = position;
+	parameters[1] = position + bounds;
+	kf::Vector3 deltaSign = 1-r.delta().sign().saturated();
+	sign[0] = deltaSign.x;
+	sign[1] = deltaSign.y;
+	sign[2] = deltaSign.z;
 
-	// Cut ray between x points
-	// if ray is in x plane, lower should be in min, upper should be in max
-	double rayCutMin = std::min( xLower, xUpper );
-	double rayCutMax = std::max( xLower, xUpper );
+	kf::Vector3 inv_direction = 1.0 / r.delta();
 
-	// y plane lower and upper points of ray
-	double yLower = ( node->position.y - ray.start().y ) / ( ray.end().y - ray.start().y );
-	double yUpper = ( node->bounds.y   - ray.start().y ) / ( ray.end().y - ray.start().y );
+	tmin = (parameters[sign[0]].x - r.start().x) * inv_direction.x;
+	tmax = (parameters[1-sign[0]].x - r.start().x) * inv_direction.x;
+	tymin = (parameters[sign[1]].y - r.start().y) * inv_direction.y;
+	tymax = (parameters[1-sign[1]].y - r.start().y) * inv_direction.y;
+	if ( (tmin > tymax) || (tymin > tmax) ) 
+		return false;
+	if (tymin > tmin)
+		tmin = tymin;
+	if (tymax < tmax)
+		tmax = tymax;
+	tzmin = (parameters[sign[2]].z - r.start().z) * inv_direction.z;
+	tzmax = (parameters[1-sign[2]].z - r.start().z) * inv_direction.z;
+	if ( (tmin > tzmax) || (tzmin > tmax) ) 
+		return false;
+	if (tzmin > tmin)
+		tmin = tzmin;
+	if (tzmax < tmax)
+		tmax = tzmax;
+	return ( (tmin < t1) && (tmax > t0) );
 
-	// cut ray between y points
-	rayCutMin = std::max( rayCutMin, std::min( yLower, yUpper ) );
-	rayCutMax = std::min( rayCutMax, std::max( yLower, yUpper ) );
-
-	// z plane lower and upper points of ray
-	double zLower = ( node->position.z - ray.start().z ) / ( ray.end().z - ray.start().z );
-	double zUpper = ( node->bounds.z   - ray.start().z ) / ( ray.end().z - ray.start().z );
-
-	// cut ray between z points
-	rayCutMin = std::max( rayCutMin, std::min( zLower, zUpper ) );
-	rayCutMax = std::min( rayCutMax, std::max( zLower, zUpper ) );
-
-	// Return true if max ray point is bigger than the min ray point
-	return rayCutMax >= rayCutMin;
+	return false;
 }
 
-/*
-
-std::vector<Renderable*> OctNode::ChildIntersection( OctNode *node, kf::Ray ray )
+void OctNode::RayTrace( std::vector<Renderable *> &rendsList, kf::Ray ray )
 {
-	// If child node is leaf node
-	if( node->isLeafNode )
-	{
-		return node->rends;
-	}
-
-	std::vector<Renderable*> nodesToSearch;
-	nodesToSearch.reserve( 500 );
-
-	// For all children in node
-	for( int childIndex = 0; childIndex < node->children.size(); ++childIndex )
-	{
-		// If ray intersects current child node
-		if( Intersection( node->children[childIndex], ray ) )
-		{
-			// If child node is leaf node
-			if( node->children[childIndex]->isLeafNode )
-			{
-				// Add all child node's rends to search list
-				for( int numRend = 0; numRend < node->children[childIndex]->rends.size(); ++numRend )
-				{
-					nodesToSearch.push_back( node->children[childIndex]->rends[numRend] );
-				}
-			}
-			// If not a leaf node
-			else
-			{
-				std::vector<Renderable*> tempList;
-
-				// Search all child nodes children
-				tempList = ChildIntersection( node->children[childIndex], ray );
-
-				// If temp list isnt empty
-				if( tempList.size() > 0 )
-				{
-					// Add all temp list nodes to nodesToSearch
-					for( int tempIndex = 0; tempIndex < tempList.size(); ++tempIndex )
-					{
-						nodesToSearch.push_back( tempList[tempIndex] );
-					}
-				}
-			}
-		}
-	}
-	return nodesToSearch;
-}
-
-std::vector<Renderable*> OctNode::OctTreeRayCheck( kf::Ray ray )
-{
-	// If child node is leaf node
 	if( isLeafNode )
 	{
-		return rends;
+		rendsList.insert( rendsList.end(), rends.begin(), rends.end() );
+		return;
 	}
 
-	std::vector<Renderable*> nodesToSearch;
-
-	nodesToSearch.reserve( 1000 );
-
-	// For all children in node
 	for( int childIndex = 0; childIndex < children.size(); ++childIndex )
 	{
-		// If ray intersects current child node
-		if( Intersection( children[childIndex], ray ) )
+		if( children[childIndex]->Intersect( ray, -1000, FLT_MAX ) )
 		{
-			// If child node is leaf node
-			if( children[childIndex]->isLeafNode )
-			{
-				// Add all child node's rends to search list
-				for( int numRend = 0; numRend < children[childIndex]->rends.size(); ++numRend )
-				{
-					nodesToSearch.push_back( children[childIndex]->rends[numRend] );
-				}
-			}
-			// If not a leaf node
-			else
-			{
-				std::vector<Renderable*> tempList;
-				tempList.reserve( 500 );
-
-				// Search all child nodes children
-				tempList = ChildIntersection( children[childIndex], ray );
-
-				// If temp list isnt empty
-				if( tempList.size() > 0 )
-				{
-					// Add all temp list nodes to nodesToSearch
-					for( int tempIndex = 0; tempIndex < tempList.size(); ++tempIndex )
-					{
-						nodesToSearch.push_back( tempList[tempIndex] );
-					}
-				}
-			}
+			children[childIndex]->RayTrace( rendsList, ray );
 		}
-	}
-	return nodesToSearch;
-}
-
-*/
-
-
-/*
-std::vector<Renderable*> OctNode::RayCheck( OctNode *octTree, kf::Ray ray )
-{
-	float tx0 = (position.x - ray.start().x) / ray.delta().x; 
-	float tx1 = ((position.x + bounds.x) - ray.start().x) / ray.delta().x; 
-	float ty0 = (position.y - ray.start().y) / ray.delta().y; 
-	float ty1 = ((position.y + bounds.y) - ray.start().y) / ray.delta().y; 
-	float tz0 = (position.z - ray.start().z) / ray.delta().z; 
-	float tz1 = ((position.z + bounds.z) - ray.start().z) / ray.delta().z;
-
-	std::vector<Renderable*> rends;
-	rends.reserve( 5000 );
-
-	ProcSubtree( rends, tx0, ty0, tz0, tx1, ty1, tz1, octTree );
-	return rends;
-}
-
-void OctNode::ProcSubtree( std::vector<Renderable*> &rends, float tx0, float ty0, float tz0, float tx1, float ty1, float tz1, OctNode *node )
-{
-	//if( std::max( tx0, std::max( ty0, tz0 ) ) > std::min( tx1, std::min( ty1, tz1 ) ) ) 
-		//return;
-
-	float rayCutMin = std::min( tx0, tx1 );
-	float rayCutMax = std::max( tx0, tx1 );
-
-	rayCutMin = std::min( rayCutMin, std::min( ty0, ty1 ) );
-	rayCutMax = std::max( rayCutMax, std::max( ty0, ty1 ) );
-
-	rayCutMin = std::min( rayCutMin, std::min( tz0, tz1 ) );
-	rayCutMax = std::max( rayCutMax, std::max( tz0, tz1 ) );
-
-	if( rayCutMax < rayCutMin )
-		return;
-
-	if( node->isLeafNode )
-	{
-		rends.insert( rends.end(), node->rends.begin(), node->rends.end() );
-		return;
-	}
-
-	float txM = 0.5 * (tx0 + tx1); 
-	float tyM = 0.5 * (ty0 + ty1); 
-	float tzM = 0.5 * (tz0 + tz1);
-
-	ProcSubtree( rends, tx0, tyM, tz0, txM, ty1, tzM, node->children[0] );
-	ProcSubtree( rends, txM, tyM, tz0, tx1, ty1, tzM, node->children[1] );
-	ProcSubtree( rends, tx0, ty0, tz0, txM, tyM, tzM, node->children[2] );
-	ProcSubtree( rends, txM, ty0, tz0, tx1, tyM, tzM, node->children[3] );
-	ProcSubtree( rends, tx0, tyM, tzM, txM, ty1, tz1, node->children[4] );
-	ProcSubtree( rends, txM, txM, tzM, tx1, ty1, tz1, node->children[5] );
-	ProcSubtree( rends, tx0, ty0, tzM, txM, tyM, tz1, node->children[6] );
-	ProcSubtree( rends, txM, ty0, tzM, tx1, tyM, tz1, node->children[7] );
-}
-*/
-
-// Test ray
-	// if leaf
-		// return rends		
-
-	// if ray is in node front half
-		// if in front top half
-			// if in front top left half
-				// return rends
-
-std::vector<Renderable*> OctNode::RayCheck( OctNode *octTree, kf::Ray ray )
-{
-	std::vector<Renderable*> rends;
-	rends.reserve( 5000 );
-
-	ProcSubtree( rends, octTree, ray );
-	return rends;
-}
-
-void OctNode::ProcSubtree( std::vector<Renderable*> &rends, OctNode *node, kf::Ray ray )
-{
-	if( node->isLeafNode )
-	{
-		rends.insert( rends.end(), node->rends.begin(), node->rends.end() );
-		return;
-	}
-
-	// x plane lower and upper points of ray
-	double xLower = ( node->position.x - ray.start().x ) / ( ray.end().x - ray.start().x );
-	double xUpper = ( node->bounds.x   - ray.start().x ) / ( ray.end().x - ray.start().x );
-	// y plane lower and upper points of ray
-	double yLower = ( node->position.y - ray.start().y ) / ( ray.end().y - ray.start().y );
-	double yUpper = ( node->bounds.y   - ray.start().y ) / ( ray.end().y - ray.start().y );
-	// z plane lower and upper points of ray
-	double zLower = ( node->position.z - ray.start().z ) / ( ray.end().z - ray.start().z );
-	double zUpper = ( node->bounds.z   - ray.start().z ) / ( ray.end().z - ray.start().z );
-
-	// front
-	if( zLower > node->position.z && zUpper < node->position.z + (node->bounds.z * 0.5) )
-	{
-		ProcSubtree( rends, children[ 0 ], ray );
-		ProcSubtree( rends, children[ 1 ], ray );
-		ProcSubtree( rends, children[ 2 ], ray );
-		ProcSubtree( rends, children[ 3 ], ray );
-	}
-	// back
-	if( zLower > node->position.z + (node->bounds.z * 0.5) && zUpper < node->position.z + node->bounds.z )
-	{
-		ProcSubtree( rends, children[ 4 ], ray );
-		ProcSubtree( rends, children[ 5 ], ray );
-		ProcSubtree( rends, children[ 6 ], ray );
-		ProcSubtree( rends, children[ 7 ], ray );
 	}
 }

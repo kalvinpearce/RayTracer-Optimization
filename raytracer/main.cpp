@@ -10,6 +10,7 @@
 #include "kf/kf_algorithms.h"
 #include "kf/kf_math.h"
 #include "OctNode.h"
+#include "omp.h"
 
 using namespace cimg_library;
 
@@ -81,9 +82,10 @@ int main(int argc, char **argv)
 	long long startTime = timer.getTicks();
 
 	// Primary loop through all screen pixels.
-	for (int y = 0; y < windowHeight; y++)
+	for (int y = 0; y < windowHeight; y += 2)
 	{
-		for (int x = 0; x < windowWidth; x++)
+#pragma omp parallel for schedule(dynamic)
+		for (int x = 0; x < windowWidth; x += 2)
 		{
 			#ifdef TIMING_PER_PIXEL
 			long long startPixelTime = timer.getTicks();
@@ -115,14 +117,14 @@ int main(int argc, char **argv)
 		}
 
 		// Perform progressive display if enabled.
-		if (progressiveDisplay)
+		/*if (progressiveDisplay)
 		{
 			if (y % progressiveCount == 0)
 			{
 				main_disp.display(image);
 				main_disp.set_title("Current render time: %fs", timer.ticksToSeconds(timer.getTicks() - startTime));
 			}
-		}
+		}*/
 
 		// Check for Escape key.
 		if (main_disp.is_keyESC())

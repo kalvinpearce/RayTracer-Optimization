@@ -1,4 +1,4 @@
-progressive(10)
+progressive(1)
 shadows(true)
 ambient(0,0,0)
 recursiveLimit(4)
